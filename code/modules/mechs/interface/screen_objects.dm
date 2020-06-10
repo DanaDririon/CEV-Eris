@@ -62,13 +62,13 @@
 	var/list/new_overlays = list()
 
 	var/obj/item/weapon/cell/C = owner.get_cell()
-	if(!C || (C.charge <= 0))
+	if(!C || (C.empty()))
 		overlays.Cut()
 		return
 
 	maptext = holding.get_hardpoint_maptext()
 
-	var/ui_damage = (!owner.body.diagnostics || !owner.body.diagnostics.is_functional() || ((owner.emp_damage > EMP_HUD_DISRUPT) && prob(owner.emp_damage)))
+	var/ui_damage = !owner.body.computer?.is_functional() || ((owner.emp_damage > EMP_HUD_DISRUPT) && prob(owner.emp_damage))
 
 	var/value = holding.get_hardpoint_status_value()
 	if(isnull(value))
@@ -230,10 +230,10 @@
 	. = ..()
 	overlays.Cut()
 	var/obj/item/weapon/cell/C = owner.get_cell()
-	if(!owner.body || !C || (C.charge <= 0))
+	if(!owner.body || !C || C.empty())
 		return
 
-	if(!owner.body.diagnostics || !owner.body.diagnostics.is_functional() || ((owner.emp_damage > EMP_HUD_DISRUPT) && prob(owner.emp_damage * 2)))
+	if(!owner.body.computer?.is_functional() || ((owner.emp_damage > EMP_HUD_DISRUPT) && prob(owner.emp_damage * 2)))
 		if(!GLOB.mech_damage_overlay_cache["critfail"]) GLOB.mech_damage_overlay_cache["critfail"] = image(icon = MECH_HUD_ICON, icon_state="dam_error")
 		overlays |= GLOB.mech_damage_overlay_cache["critfail"]
 		return
